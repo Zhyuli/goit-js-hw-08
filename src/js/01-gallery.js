@@ -31,5 +31,6 @@ function createGalMarkup(items) {
         .join('')
 }
 
+container.style.listStyle = "none";
 
 console.log(galleryItems);
