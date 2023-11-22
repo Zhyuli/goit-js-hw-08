@@ -5,14 +5,14 @@ const iframe = document.getElementById('vimeo-player');
 const player = new Player(iframe);
 const KEY_CURRENT_TIME = "videoplayer-current-time";
 
-const onPlay = function (data) {
-    const seconds = data.seconds;
+const getCurrentTime = function (currentTime) {
+    const seconds = currentTime.seconds;
     localStorage.setItem(KEY_CURRENT_TIME, JSON.stringify(seconds));
 }
 
-player.on('timeupdate', throttle(onPlay, 1000));
+player.on('timeupdate', throttle(getCurrentTime, 1000));
 
-player.setData(JSON.parse(localStorage.getItem(KEY_CURRENT_TIME)) || 0);
+player.setCurrentTime(JSON.parse(localStorage.getItem(KEY_CURRENT_TIME)) || 0);
 
 
 // const onPlay = function (data) {
