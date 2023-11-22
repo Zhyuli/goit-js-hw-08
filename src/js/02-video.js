@@ -3,27 +3,39 @@ import throttle from 'lodash.throttle';
 
 const iframe = document.getElementById('vimeo-player');
 const player = new Player(iframe);
+const KEY_CURRENT_TIME = "videoplayer-current-time";
+
 const onPlay = function (data) {
-    localStorage.setItem("videoplayer-current-time", data.seconds);
+    const seconds = data.seconds;
+    localStorage.setItem(KEY_CURRENT_TIME, JSON.stringify(seconds));
 }
-player.on('play', throttle(onPlay, 1000));
 
-const currentTime = +localStorage.getItem("videoplayer-current-time");
-console.log(currentTime);
+player.on('timeupdate', throttle(onPlay, 1000));
 
-player.setCurrentTime(currentTime).then(function(seconds) {
-    // seconds = the actual time that the player seeked to
-}).catch(function(error) {
-    switch (error.name) {
-        case 'RangeError':
-            // the time was less than 0 or greater than the video’s duration
-            break;
+player.setData(JSON.parse(localStorage.getItem(KEY_CURRENT_TIME)) || 0);
 
-        default:
-            // some other error occurred
-            break;
-    }
-});
+
+// const onPlay = function (data) {
+//     localStorage.setItem("videoplayer-current-time", data.seconds);
+// }
+// player.on('play', throttle(onPlay, 1000));
+
+// const currentTime = +localStorage.getItem("videoplayer-current-time");
+// // console.log(currentTime);
+
+// player.setCurrentTime(currentTime).then(function(seconds) {
+//     // seconds = the actual time that the player seeked to
+// }).catch(function(error) {
+//     switch (error.name) {
+//         case 'RangeError':
+//             // the time was less than 0 or greater than the video’s duration
+//             break;
+
+//         default:
+//             // some other error occurred
+//             break;
+//     }
+// });
 
 
     // player.on('play', function() {
