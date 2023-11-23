@@ -1,35 +1,67 @@
 import throttle from 'lodash.throttle';
 
-const feedbackForm = document.querySelector('.feedback-form');
-// console.dir(feedbackForm);
 
 const KEY_STORAGE = "feedback-form-state";
 // const parse_el = JSON.parse(localStorage.getItem(KEY_STORAGE));
 // console.log(parse_el);
+feedbackForm = document.querySelector('.feedback-form');
 
 feedbackForm.addEventListener('input', throttle(onInput, 500));
 feedbackForm.addEventListener('submit', onSubmit);
 
+let dataForm = JSON.parse(localStorage.getItem(KEY_STORAGE)) || {};
+const { email, message } = feedbackForm.elements;
+reloadPage();
 
-function onSubmit(evt) {
-   evt.preventDefault();
-
-    const { email, message } = evt.target.elements;
-    console.log({ email: email.value, message: message.value });
-    localStorage.removeItem(KEY_STORAGE);  
-
+function onInput(evt) { 
+    dataForm = { email: email.value, message: message.value };
+    localStorage.setItem(KEY_STORAGE, JSON.stringify(dataForm));
 }
 
-
-function onInput(evt) {
-    let dataInput = localStorage.getItem(KEY_STORAGE);
-    dataInput = dataInput ? JSON.parse(dataInput) : {};
-    let { email, message } = feedbackForm.elements;
-    dataInput = {
-        email: email.value.trim(),
-        message: message.value.trim(),
+function reloadPage() {
+    if (dataForm) {
+        email.value = dataForm.email || '';
+        message.value = dataForm.message || '';
     }
-    dataInput[evt.target.name] = evt.target.value.trim();
-    localStorage.setItem(KEY_STORAGE, JSON.stringify(dataInput));
-    
 }
+
+function onSubmit(evt) { 
+    evt.preventDefault();
+    console.log({ email: email.value, message: message.value });
+    
+    if (email.value === '' || message.value === '') {
+        return alert('Please fill the fields!');
+    }
+
+    localStorage.removeItem(KEY_STORAGE);
+    evt.currentTarget.reset();
+    dataForm = {};
+}
+
+
+
+
+
+
+// function onSubmit(evt) {
+//    evt.preventDefault();
+
+//     const { email, message } = evt.target.elements;
+//     console.log({ email: email.value, message: message.value });
+//     localStorage.removeItem(KEY_STORAGE);  
+
+// }
+
+
+// function onInput(evt) {
+//     let dataInput = localStorage.getItem(KEY_STORAGE);
+//     dataInput = dataInput ? JSON.parse(dataInput) : {};
+//     let { email, message } = feedbackForm.elements;
+//     dataInput = {
+//         email: email.value.trim(),
+//         message: message.value.trim(),
+//     }
+//     dataInput[evt.target.name] = evt.target.value.trim();
+//     localStorage.setItem(KEY_STORAGE, JSON.stringify(dataInput));
+    
+// }
