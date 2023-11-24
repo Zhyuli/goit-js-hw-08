@@ -5,6 +5,7 @@ const KEY_STORAGE = "feedback-form-state";
 // const parse_el = JSON.parse(localStorage.getItem(KEY_STORAGE));
 // console.log(parse_el);
 feedbackForm = document.querySelector('.feedback-form');
+console.log(feedbackForm);
 
 feedbackForm.addEventListener('input', throttle(onInput, 500));
 feedbackForm.addEventListener('submit', onSubmit);
